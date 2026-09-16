@@ -23,8 +23,7 @@ package Financial_Information_Exchange is
 
    --  Message Construction & Operations
    function Empty_Message return Fix_Message
-     with Global => null,
-          Post   => Empty_Message'Result = Empty_Message;
+     with Global => null;
 
    procedure Add_Field (Msg   : in out Fix_Message;
                         Tag   : Tag_Number;
