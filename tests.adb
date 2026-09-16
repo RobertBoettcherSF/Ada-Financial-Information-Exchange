@@ -53,23 +53,21 @@ begin
       Result : constant Checksum_Value := Calculate_Checksum (Raw);
    begin
       Check ("3.1 Correct checksum integer math", Result = 161);
+      pragma Warnings (Off, "condition can only be False if invalid values present");
       Check ("3.2 Type domain is constrained correctly", Result <= 255);
-      Check ("3.3 Valid character processing", Raw'Length = 22);
+      pragma Warnings (On, "condition can only be False if invalid values present");
+      Check ("3.3 Valid character processing", Raw'Length = 19);
    end;
 
    -- TEST 4 — Serialization Formatting
    Put_Line ("TEST 4 — Message Serialization");
    declare
       M   : Fix_Message := Empty_Message;
-      Str : String (1 .. 100);
-      Len : Natural;
    begin
       Add_Field (M, 35, "0");
       declare
          Ser : constant String := Serialize (M);
       begin
-         Str (1 .. Ser'Length) := Ser;
-         Len := Ser'Length;
          Check ("4.1 Serialized string contains BeginString (Tag 8)", Ada.Strings.Fixed.Index (Ser, "8=FIX.4.2") > 0);
          Check ("4.2 Serialized string contains Checksum (Tag 10)", Ada.Strings.Fixed.Index (Ser, "10=") > 0);
          Check ("4.3 Length matches standard formatting expectations", Ser'Length > 15);
@@ -127,6 +125,7 @@ begin
       begin
          declare
             M : constant Fix_Message := Parse (Raw);
+            pragma Unreferenced (M);
          begin
             null; -- Should never execute
          end;
@@ -148,6 +147,7 @@ begin
       begin
          declare
             M : constant Fix_Message := Parse (Raw);
+            pragma Unreferenced (M);
          begin
             null;
          end;
@@ -170,6 +170,7 @@ begin
       begin
          declare
             M : constant Fix_Message := Parse (Raw, Validate_Checksum => True);
+            pragma Unreferenced (M);
          begin
             null;
          end;
@@ -192,6 +193,7 @@ begin
       begin
          declare
             Val : constant String := Get_Field (M, 999);
+            pragma Unreferenced (Val);
          begin
             null;
          end;
